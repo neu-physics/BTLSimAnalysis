@@ -1,0 +1,5 @@
+*.*~
+*.pyc
+data
+*.root
+test/crab/crab_run*
