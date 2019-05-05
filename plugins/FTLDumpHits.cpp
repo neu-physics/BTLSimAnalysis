@@ -104,7 +104,11 @@ private:
   edm::Handle<std::vector<PSimHit> > simHitsBTLHandle_;
   edm::EDGetTokenT<std::vector<PSimHit> > simHitsBTLToken_;
   edm::Handle<FTLRecHitCollection> recHitsBTLHandle_;
-  edm::EDGetTokenT<FTLRecHitCollection> recHitsBTLToken_;    
+  edm::EDGetTokenT<FTLRecHitCollection> recHitsBTLToken_;
+   //***************************** uncalibrated *********************************    
+  edm::Handle<FTLUncalibratedRecHitCollection> recHitsBTLHandle_uncal_;
+  edm::EDGetTokenT<FTLUncalibratedRecHitCollection> recHitsBTLToken_uncal_;
+  //***************************** uncalibrated ********************************* 
   edm::Handle<FTLClusterCollection> clustersBTLHandle_;
   edm::EDGetTokenT<FTLClusterCollection> clustersBTLToken_;    
 
@@ -117,6 +121,11 @@ private:
 
   edm::EDGetTokenT<edm::View<reco::Track> > tracksToken_;
   edm::Handle<edm::View<reco::Track> > tracksHandle_;
+  //*******************************tracklength***************************
+  edm::EDGetTokenT<edm::ValueMap<float> > tracksLengthToken_;
+  edm::Handle<edm::ValueMap<float> > tracksLengthHandle_;
+  //*******************************tracklength***************************
+
   edm::EDGetTokenT<vector<SimVertex> >                 genVtxToken_;
   edm::Handle<vector<SimVertex> >                      genVtxHandle_;    
   edm::ESHandle<TransientTrackBuilder> builder;
@@ -144,8 +153,10 @@ FTLDumpHits::FTLDumpHits(const edm::ParameterSet& pSet):
   clustersBTLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersBTLTag"))),
   simHitsETLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsETLTag"))),
   recHitsETLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsETLTag"))),
+  recHitsBTLToken_uncal_(consumes<FTLUncalibratedRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("uncal_recHitsBTLTag"))),
   clustersETLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersETLTag"))),
   tracksToken_(consumes<edm::View<reco::Track> >(pSet.getUntrackedParameter<edm::InputTag>("tracksTag"))),
+  tracksLengthToken_(consumes<edm::ValueMap<float> >(pSet.getUntrackedParameter<edm::InputTag>("tracksLengthTag"))),
   genVtxToken_(consumes<vector<SimVertex> >(pSet.getUntrackedParameter<edm::InputTag>("genVtxTag"))),
   crysLayout_((BTLDetId::CrysLayout)(pSet.getUntrackedParameter<int>("crysLayout"))),
   track_hit_DRMax_(pSet.getParameter<double>("track_hit_DRMax")),
@@ -193,6 +204,15 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   auto recHitsBTL = FTLRecHitCollection();
   if(recHitsBTLHandle_.isValid())
     recHitsBTL = *recHitsBTLHandle_.product();
+	
+	
+//***************************** uncalibrated *********************************    
+  event.getByToken(recHitsBTLToken_uncal_, recHitsBTLHandle_uncal_);
+  auto recHitsBTL_uncal = FTLUncalibratedRecHitCollection();
+  if(recHitsBTLHandle_uncal_.isValid())
+    recHitsBTL_uncal = *recHitsBTLHandle_uncal_.product();
+  //***************************** uncalibrated ********************************* 
+	
   event.getByToken(clustersBTLToken_, clustersBTLHandle_);
 
   // auto clusters = FTLClusterCollection();
@@ -216,6 +236,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   //---load tracks
   event.getByToken(tracksToken_,tracksHandle_);
   auto tracks = *tracksHandle_.product();
+	
+//******************** Ang tracklength**************
+   event.getByToken(tracksLengthToken_,tracksLengthHandle_);
+//******************** Ang tracklength**************
 
   event.getByToken(genVtxToken_, genVtxHandle_);    
   const SimVertex* genPV = NULL;
@@ -325,6 +349,41 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.recHits_local_z->push_back(lp.z());
 	  outTree_.recHits_global_R->push_back(sqrt(gp.perp2()));
 	}
+//*******************Ang fill uncalibrated recHits tree***************
+      for(auto recHit_uncal : recHitsBTL_uncal)
+        {
+          BTLDetId id = recHit_uncal.id();
+          DetId geoId = id.geographicalId( crysLayout_);
+          const auto& det = mtdGeometry_ -> idToDet(geoId);
+          const ProxyMTDTopology& topoproxy = static_cast<const ProxyMTDTopology&>(det->topology());
+          const RectangularMTDTopology& topo = static_cast<const RectangularMTDTopology&>(topoproxy.specificTopology());
+
+          //double energy = recHit_uncal.energy();
+          //double time   = recHit_uncal.time();
+
+      std::pair<float,float> time_pair = recHit_uncal.time();
+      float time1 = time_pair.first;
+      float time2 = time_pair.second;
+
+
+          outTree_.recHits_uncal_time1->push_back(time1);
+          outTree_.recHits_uncal_time2->push_back(time2);
+          MeasurementPoint mp(recHit_uncal.row(),recHit_uncal.column());
+          LocalPoint lp = topo.localPosition(mp);
+          GlobalPoint gp = det->toGlobal(lp);
+	  float eta = gp.eta();
+          float phi = gp.phi();
+          float x = gp.x();
+          float y = gp.y();
+          float z = gp.z();
+          outTree_.recHits_uncal_eta->push_back(eta);
+          outTree_.recHits_uncal_phi->push_back(phi);
+          outTree_.recHits_uncal_x->push_back(x);
+          outTree_.recHits_uncal_y->push_back(y);
+          outTree_.recHits_uncal_z->push_back(z);
+        }
+//*******************Ang fill uncalibrated recHits tree***************
+
     }
 
   //---fill the tree - BTL clusters
@@ -598,7 +657,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       if( track.charge() == 0 ) continue;
       //    if( fabs(track.eta()) > 1.5 ) continue;
       if( track.pt() < 0.7 ) continue;
-    
+ //*******************Ang fill track length***************
+      edm::Ptr< reco::Track > ptr( tracksHandle_, iTrack);
+      double trackLength = (*tracksLengthHandle_)[ptr];
+ //*******************Ang fill track length***************
       // match with gen particles
       float DRMin = 999999;
       int genPdgId = 0;
@@ -648,6 +710,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_y -> push_back(track.vy());
       outTree_.track_z -> push_back(track.vz());
       outTree_.track_t -> push_back(track.t0());
+//*******************Ang fill track length***************
+      outTree_.track_length -> push_back(trackLength);
+      outTree_.track_velocity -> push_back(track.beta());
+//*******************Ang fill track length***************
       outTree_.track_energy -> push_back(sqrt(track.momentum().mag2()));
       outTree_.track_normalizedChi2 -> push_back(track.normalizedChi2());
       outTree_.track_numberOfValidHits -> push_back(track.numberOfValidHits());
