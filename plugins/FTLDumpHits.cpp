@@ -214,8 +214,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 
   event.getByToken(clustersBTLToken_, clustersBTLHandle_);
 
-   auto clusters = FTLClusterCollection();
-   if(clustersBTLHandle_.isValid())
+   //auto clusters = FTLClusterCollection();
+   //if(clustersBTLHandle_.isValid())
   auto clustersBTL = *clustersBTLHandle_.product();
 
   //---load sim hits
@@ -228,8 +228,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   if(recHitsETLHandle_.isValid())
     recHitsETL = *recHitsETLHandle_.product();
   event.getByToken(clustersETLToken_, clustersETLHandle_);
-   auto clusters = FTLClusterCollection();
-   if(clustersETLHandle_.isValid())
+   //auto clusters = FTLClusterCollection();
+   //if(clustersETLHandle_.isValid())
   auto clustersETL = *clustersETLHandle_.product();
 
   //---load tracks
