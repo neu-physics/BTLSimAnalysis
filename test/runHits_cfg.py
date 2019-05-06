@@ -59,7 +59,7 @@ options.register('nThreads',
                  VarParsing.varType.int,
                  "# threads")
 options.register('dumpRecHits',
-                 False,
+                 True,
                  VarParsing.multiplicity.singleton,
                  VarParsing.varType.bool,
                  "Dump ETL/BTL recHits")
@@ -70,6 +70,7 @@ options.register('dumpSimHits',
                  "Dump ETL/BTL simHits")
 
 options.maxEvents = -1
+#options.maxEvents = 100
 options.parseArguments()
 
 from Configuration.StandardSequences.Eras import eras
@@ -80,6 +81,25 @@ if 'barphi' in options.crysLayout:
 if 'barzflat' in options.crysLayout:
     myera=eras.Phase2C4_timing_layer_bar
 process = cms.Process('FTLDumpHits',myera)
+'''
+process.load('FWCore/MessageService/MessageLogger_cfi')
+process.MessageLogger = cms.Service("MessageLogger",
+   destinations   = cms.untracked.vstring(
+                                                'detailedInfo'
+                                               ,'critical'
+                                               ,'cout'
+                    ),
+       critical       = cms.untracked.PSet(
+                        threshold = cms.untracked.string('WARNING') 
+        ),
+       detailedInfo   = cms.untracked.PSet(
+                      threshold  = cms.untracked.string('INFO') 
+       ),
+       cout           = cms.untracked.PSet(
+                       threshold  = cms.untracked.string('WARNING') 
+        )
+)
+'''
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
@@ -106,8 +126,8 @@ if 'tile' in options.crysLayout:
     process.load('Configuration.Geometry.GeometryExtended2023D24Reco_cff')
     process.load('Configuration.Geometry.GeometryExtended2023D24_cff')
 if 'barphi' in options.crysLayout:
-    process.load('Configuration.Geometry.GeometryExtended2023D25Reco_cff')
-    process.load('Configuration.Geometry.GeometryExtended2023D25_cff')
+    process.load('Configuration.Geometry.GeometryExtended2023D39Reco_cff')
+    process.load('Configuration.Geometry.GeometryExtended2023D39_cff')
 if 'barzflat' in options.crysLayout:
     process.load('Configuration.Geometry.GeometryExtended2023D35Reco_cff')
     process.load('Configuration.Geometry.GeometryExtended2023D35_cff')
@@ -151,7 +171,7 @@ for eosusdir in options.eosusdirs:
         eosusdir += '/'
     print('>> Creating list of files from: \n'+eosusdir)
     
-    command = 'eos root://cmseos.fnal.gov ls '+eosusdir+' | grep root | grep -v failed | grep '+options.pattern+' | grep -v '+options.antipattern
+    command = 'eos root://cms-xrd-global.cern.ch ls '+eosusdir+' | grep root | grep -v failed | grep '+options.pattern+' | grep -v '+options.antipattern
     str_files = subprocess.check_output(command,shell=True).splitlines()
     print str_files
     files.extend(['root://cms-xrd-global.cern.ch/'+eosusdir+'/'+ifile for ifile in str_files])
@@ -175,7 +195,7 @@ if (options.useMTDTrack):
 if 'tile' in options.crysLayout:
     FTLDumper.crysLayout = cms.untracked.int32(1)
 if 'barphi' in options.crysLayout:
-    FTLDumper.crysLayout = cms.untracked.int32(2)
+    FTLDumper.crysLayout = cms.untracked.int32(4)
 if 'barzflat' in options.crysLayout:
     FTLDumper.crysLayout = cms.untracked.int32(3)
 

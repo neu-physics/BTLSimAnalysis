@@ -19,7 +19,6 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/ForwardDetId/interface/BTLDetId.h"
 #include "DataFormats/ForwardDetId/interface/ETLDetId.h"
-#include "DataFormats/FTLRecHit/interface/FTLUncalibratedRecHit.h"
 #include "DataFormats/FTLRecHit/interface/FTLRecHit.h"
 #include "DataFormats/FTLRecHit/interface/FTLRecHitCollections.h"
 #include "DataFormats/FTLRecHit/interface/FTLClusterCollections.h"
@@ -104,10 +103,17 @@ private:
   edm::Handle<std::vector<PSimHit> > simHitsBTLHandle_;
   edm::EDGetTokenT<std::vector<PSimHit> > simHitsBTLToken_;
   edm::Handle<FTLRecHitCollection> recHitsBTLHandle_;
-  edm::EDGetTokenT<FTLRecHitCollection> recHitsBTLToken_;    
-  edm::Handle<FTLClusterCollection> clustersBTLHandle_;
-  edm::EDGetTokenT<FTLClusterCollection> clustersBTLToken_;    
+  edm::EDGetTokenT<FTLRecHitCollection> recHitsBTLToken_;   
 
+	//***************************** uncalibrated *********************************    
+  edm::Handle<FTLUncalibratedRecHitCollection> recHitsBTLHandle_uncal_;
+  edm::EDGetTokenT<FTLUncalibratedRecHitCollection> recHitsBTLToken_uncal_;   
+  //***************************** uncalibrated *********************************    
+	
+	 
+  edm::Handle<FTLClusterCollection> clustersBTLHandle_;
+  edm::EDGetTokenT<FTLClusterCollection> clustersBTLToken_;
+  
   edm::Handle<std::vector<PSimHit> > simHitsETLHandle_;
   edm::EDGetTokenT<std::vector<PSimHit> > simHitsETLToken_;
   edm::Handle<FTLRecHitCollection> recHitsETLHandle_;
@@ -117,6 +123,10 @@ private:
 
   edm::EDGetTokenT<edm::View<reco::Track> > tracksToken_;
   edm::Handle<edm::View<reco::Track> > tracksHandle_;
+  edm::EDGetTokenT<edm::ValueMap<float> > tracksLengthToken_;
+  edm::Handle<edm::ValueMap<float> > tracksLengthHandle_;
+  edm::EDGetTokenT<edm::ValueMap<float> > tracktmtdToken_;
+  edm::Handle<edm::ValueMap<float> > tracktmtdHandle_;
   edm::EDGetTokenT<vector<SimVertex> >                 genVtxToken_;
   edm::Handle<vector<SimVertex> >                      genVtxHandle_;    
   edm::ESHandle<TransientTrackBuilder> builder;
@@ -135,17 +145,18 @@ private:
   
 };
 
-
-
 FTLDumpHits::FTLDumpHits(const edm::ParameterSet& pSet):
   genParticlesToken_(consumes<reco::GenParticleCollection>(pSet.getUntrackedParameter<edm::InputTag>("genParticlesTag"))),
   simHitsBTLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsBTLTag"))),
   recHitsBTLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsBTLTag"))),
+  recHitsBTLToken_uncal_(consumes<FTLUncalibratedRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("uncal_recHitsBTLTag"))),  
   clustersBTLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersBTLTag"))),
   simHitsETLToken_(consumes<std::vector<PSimHit> >(pSet.getUntrackedParameter<edm::InputTag>("simHitsETLTag"))),
   recHitsETLToken_(consumes<FTLRecHitCollection>(pSet.getUntrackedParameter<edm::InputTag>("recHitsETLTag"))),
   clustersETLToken_(consumes<FTLClusterCollection>(pSet.getUntrackedParameter<edm::InputTag>("clustersETLTag"))),
   tracksToken_(consumes<edm::View<reco::Track> >(pSet.getUntrackedParameter<edm::InputTag>("tracksTag"))),
+  tracksLengthToken_(consumes<edm::ValueMap<float> >(pSet.getUntrackedParameter<edm::InputTag>("tracksLengthTag"))),
+  tracktmtdToken_(consumes<edm::ValueMap<float> >(pSet.getUntrackedParameter<edm::InputTag>("trackstmtdTag"))),
   genVtxToken_(consumes<vector<SimVertex> >(pSet.getUntrackedParameter<edm::InputTag>("genVtxTag"))),
   crysLayout_((BTLDetId::CrysLayout)(pSet.getUntrackedParameter<int>("crysLayout"))),
   track_hit_DRMax_(pSet.getParameter<double>("track_hit_DRMax")),
@@ -193,10 +204,18 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   auto recHitsBTL = FTLRecHitCollection();
   if(recHitsBTLHandle_.isValid())
     recHitsBTL = *recHitsBTLHandle_.product();
+  //***************************** uncalibrated *********************************    
+  event.getByToken(recHitsBTLToken_uncal_, recHitsBTLHandle_uncal_);
+  auto recHitsBTL_uncal = FTLUncalibratedRecHitCollection();
+  if(recHitsBTLHandle_uncal_.isValid())
+    recHitsBTL_uncal = *recHitsBTLHandle_uncal_.product();
+  //***************************** uncalibrated *********************************    
+
+
   event.getByToken(clustersBTLToken_, clustersBTLHandle_);
 
-  // auto clusters = FTLClusterCollection();
-  // if(clustersBTLHandle_.isValid())
+   auto clusters = FTLClusterCollection();
+   if(clustersBTLHandle_.isValid())
   auto clustersBTL = *clustersBTLHandle_.product();
 
   //---load sim hits
@@ -209,14 +228,16 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   if(recHitsETLHandle_.isValid())
     recHitsETL = *recHitsETLHandle_.product();
   event.getByToken(clustersETLToken_, clustersETLHandle_);
-  // auto clusters = FTLClusterCollection();
-  // if(clustersETLHandle_.isValid())
+   auto clusters = FTLClusterCollection();
+   if(clustersETLHandle_.isValid())
   auto clustersETL = *clustersETLHandle_.product();
 
   //---load tracks
   event.getByToken(tracksToken_,tracksHandle_);
   auto tracks = *tracksHandle_.product();
-
+  event.getByToken(tracksLengthToken_,tracksLengthHandle_);
+  event.getByToken(tracktmtdToken_,tracktmtdHandle_);
+  
   event.getByToken(genVtxToken_, genVtxHandle_);    
   const SimVertex* genPV = NULL;
 
@@ -280,7 +301,6 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   outTree_.recHits_n = 0;
   if (dumpRecHits_)
     {
-
       for(auto recHit : recHitsBTL)
 	{
 	  BTLDetId id = recHit.id();
@@ -305,9 +325,47 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  int iphi = id.iphi(crysLayout_);
 	  float eta = gp.eta();
 	  float phi = gp.phi();
+/************************* matching uncalibrated recHits with recHits ***********************/
+	  /*bool match_success = false;
 
+	  for(auto recHit_uncal_ : recHitsBTL_uncal)
+	  {
+	    if((recHit.row()==recHit_uncal_.row())&&(recHit.column()==recHit_uncal_.column()))
+		{
+		  BTLDetId id_uncal = recHit_uncal_.id();
+          	  DetId geoId_uncal = id_uncal.geographicalId( crysLayout_);
+          	  const auto& det_uncal = mtdGeometry_ -> idToDet(geoId_uncal);
+          	  const ProxyMTDTopology& topoproxy_uncal = static_cast<const ProxyMTDTopology&>(det_uncal->topology());
+          	  const RectangularMTDTopology& topo_uncal = static_cast<const RectangularMTDTopology&>(topoproxy_uncal.specificTopology());
+		  std::pair<float,float> time_pair = recHit_uncal_.time();
+      		  float time1 = time_pair.first;
+      		  float time2 = time_pair.second;
+		  outTree_.recHits_time1_uncalibrated->push_back(time1);
+		  outTree_.recHits_time2_uncalibrated->push_back(time2);
+		  
+		  MeasurementPoint mp_uncal(recHit_uncal_.row(),recHit_uncal_.column());
+	          LocalPoint lp_uncal = topo_uncal.localPosition(mp_uncal);
+        	  GlobalPoint gp_uncal = det_uncal->toGlobal(lp_uncal);
+		  float eta_uncal = gp_uncal.eta();
+        	  float phi_uncal = gp_uncal.phi();
+        	  outTree_.recHits_eta_uncalibrated->push_back(eta_uncal);
+        	  outTree_.recHits_phi_uncalibrated->push_back(phi_uncal);
+		  outTree_.recHits_matched_with_uncalibrated->push_back(1.0);
+		  match_success = true;
+		  break;
+		}
+	  }
+
+	  if(!match_success)
+	  {
+		  //std::cout << "nothing matched" << std::endl;
+		  outTree_.recHits_matched_with_uncalibrated->push_back(0.0);
+	  }
+	  match_success = false;*/
+	  //std::cout << "match_success: " << match_success << std::endl;
+	  
 	  outTree_.recHits_n += 1;
-    
+	    
 	  outTree_.recHits_det->push_back(1);
 	  outTree_.recHits_energy->push_back(energy);
 	  outTree_.recHits_time->push_back(time);
@@ -325,7 +383,48 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.recHits_local_z->push_back(lp.z());
 	  outTree_.recHits_global_R->push_back(sqrt(gp.perp2()));
 	}
+/****************************** looping over uncalibrated recHits *********************/
+	for(auto recHit_uncal : recHitsBTL_uncal)
+	{
+	  BTLDetId id = recHit_uncal.id();
+	  DetId geoId = id.geographicalId( crysLayout_);
+	  const auto& det = mtdGeometry_ -> idToDet(geoId);
+	  const ProxyMTDTopology& topoproxy = static_cast<const ProxyMTDTopology&>(det->topology());
+	  const RectangularMTDTopology& topo = static_cast<const RectangularMTDTopology&>(topoproxy.specificTopology());    
+    
+	  //double energy = recHit_uncal.energy();
+	  //double time   = recHit_uncal.time();
+
+      std::pair<float,float> time_pair = recHit_uncal.time();
+      float time1 = time_pair.first;
+      float time2 = time_pair.second;
+
+
+    	  outTree_.recHits_uncal_time1->push_back(time1);
+	  outTree_.recHits_uncal_time2->push_back(time2);
+	  MeasurementPoint mp(recHit_uncal.row(),recHit_uncal.column());
+	  LocalPoint lp = topo.localPosition(mp);
+	  GlobalPoint gp = det->toGlobal(lp);
+    	  float eta = gp.eta();
+          float phi = gp.phi();
+	  float x = gp.x();
+          float y = gp.y();
+          float z = gp.z();
+	  outTree_.recHits_uncal_eta->push_back(eta);
+          outTree_.recHits_uncal_phi->push_back(phi);
+	  outTree_.recHits_uncal_x->push_back(x);
+	  outTree_.recHits_uncal_y->push_back(y);
+	  outTree_.recHits_uncal_z->push_back(z);
+
+
+	  //outTree_.recHits_uncal_n += 1;
+    
+	}
     }
+
+
+
+    
 
   //---fill the tree - BTL clusters
   outTree_.clusters_n = 0;
@@ -598,7 +697,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       if( track.charge() == 0 ) continue;
       //    if( fabs(track.eta()) > 1.5 ) continue;
       if( track.pt() < 0.7 ) continue;
-    
+      edm::Ptr< reco::Track > ptr( tracksHandle_, iTrack);
+      double trackLength = (*tracksLengthHandle_)[ptr];
+      double tracktmtd = (*tracktmtdHandle_)[ptr];
+
       // match with gen particles
       float DRMin = 999999;
       int genPdgId = 0;
@@ -648,6 +750,9 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_y -> push_back(track.vy());
       outTree_.track_z -> push_back(track.vz());
       outTree_.track_t -> push_back(track.t0());
+      outTree_.track_length -> push_back(trackLength);
+      outTree_.track_velocity -> push_back(track.beta());
+      outTree_.track_tmtd -> push_back(tracktmtd);
       outTree_.track_energy -> push_back(sqrt(track.momentum().mag2()));
       outTree_.track_normalizedChi2 -> push_back(track.normalizedChi2());
       outTree_.track_numberOfValidHits -> push_back(track.numberOfValidHits());

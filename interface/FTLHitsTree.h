@@ -29,6 +29,9 @@ using namespace std;
   DATA(vector<float>, track_y)                                          \
   DATA(vector<float>, track_z)                                          \
   DATA(vector<float>, track_t)                                          \
+  DATA(vector<float>, track_length)                                          \
+  DATA(vector<float>, track_velocity)                                          \
+  DATA(vector<float>, track_tmtd)                                          \
   DATA(vector<float>, track_energy)                                     \
   DATA(vector<float>, track_normalizedChi2)                             \
   DATA(vector<int>,   track_numberOfValidHits)                          \
@@ -77,6 +80,13 @@ using namespace std;
   DATA(vector<float>, recHits_local_y)                                  \
   DATA(vector<float>, recHits_local_z)                                  \
   DATA(vector<float>, recHits_global_R)                                 \
+  DATA(vector<float>, recHits_uncal_time1)                                     \
+  DATA(vector<float>, recHits_uncal_time2)                                     \
+  DATA(vector<double>,   recHits_uncal_eta)                                     \
+  DATA(vector<double>,   recHits_uncal_phi)                                     \
+  DATA(vector<float>, recHits_uncal_x)                                          \
+  DATA(vector<float>, recHits_uncal_y)                                          \
+  DATA(vector<float>, recHits_uncal_z)                                          \
   DATA(vector<int>,   clusters_det)                                   \
   DATA(vector<float>, clusters_energy)                                   \
   DATA(vector<float>, clusters_time)                                     \
