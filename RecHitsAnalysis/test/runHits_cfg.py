@@ -187,7 +187,7 @@ process.source = cms.Source(
     )
 process.source.duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
                             
-process.load('PrecisionTiming.FTLAnalysis.FTLDumpHits_cfi')
+process.load('BTLSimAnalysis.RecHitsAnalysis.FTLDumpHits_cfi')
 FTLDumper = process.FTLDumpHits
 if (options.useMTDTrack):
     FTLDumper.tracksTag = cms.untracked.InputTag("trackExtenderWithMTD")

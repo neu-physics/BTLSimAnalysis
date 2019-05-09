@@ -1,7 +1,7 @@
 #ifndef _FTL_DUMP_JETS_
 #define _FTL_DUMP_JETS_
 
-#include "PrecisionTiming/FTLAnalysis/interface/FTLJetsTree.h"
+#include "BTLSimAnalysis/RecHitsAnalysis/interface/FTLJetsTree.h"
 
 #include "TLorentzVector.h"
 

@@ -36,7 +36,7 @@
 #include "RecoEgamma/EgammaMCTools/interface/PhotonMCTruthFinder.h"
 #include "RecoEgamma/EgammaMCTools/interface/PhotonMCTruth.h"
 
-#include "PrecisionTiming/FTLAnalysis/interface/FTLPhotonsTree.h"
+#include "BTLSimAnalysis/RecHitsAnalysis/interface/FTLPhotonsTree.h"
 
 using namespace std;
 

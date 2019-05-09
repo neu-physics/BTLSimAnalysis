@@ -70,7 +70,7 @@
 #include "RecoMTD/DetLayers/interface/MTDDetRing.h"
 #include "RecoMTD/Records/interface/MTDRecoGeometryRecord.h"
 
-#include "PrecisionTiming/FTLAnalysis/interface/FTLHitsTree.h"
+#include "BTLSimAnalysis/RecHitsAnalysis/interface/FTLHitsTree.h"
 
 #include <memory>
 using namespace std;

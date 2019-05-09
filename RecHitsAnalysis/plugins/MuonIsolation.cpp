@@ -44,7 +44,7 @@
 #include "TTree.h"
 #include "TRandom.h"
 
-#include "PrecisionTiming/FTLAnalysis/interface/FTLMuonIsoTree.h"
+#include "BTLSimAnalysis/RecHitsAnalysis/interface/FTLMuonIsoTree.h"
 
 //
 // class declaration
