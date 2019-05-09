@@ -1,4 +1,3 @@
-<use   name="root"/>
 <use   name="FWCore/Framework"/>
 <use   name="FWCore/Utilities"/>
 <use   name="FWCore/PluginManager"/>
@@ -35,7 +34,11 @@
 <use   name="RecoLocalFastTime/FTLRecProducers"/>
 <use   name="RecoLocalFastTime/FTLCommonAlgos"/>
 <use   name="ExternalTools/DynamicTTree"/>
-<flags EDM_PLUGIN="1"/>
-<export>
-  <lib   name="1"></lib>
-</export>
+<use   name="clhep"/>
+<use   name="xerces-c"/>
+<use   name="boost"/>
+<use   name="root"/>
+<use   name="rootrflx"/>
+<library   file="*.cpp" name="RecHitsPlugins">
+  <flags   EDM_PLUGIN="1"/>
+</library>
