@@ -247,7 +247,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   
   //---fill the tree - simHits
   outTree_.simHits_n = 0;
-  if (dumpSimHits_)
+ // if (dumpSimHits_)
+    if (1)
     {
       for(auto simHit : simHitsBTL)
 	{
@@ -270,10 +271,15 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  int iphi = id.iphi(crysLayout_);
     
 	  LocalPoint lp_entry(simHit.entryPoint().x()/10., simHit.entryPoint().y()/10., simHit.entryPoint().z()/10.);
+	  //LocalPoint lp_mid  (simHit.localPosition().x()/10.,simHit.localPosition().y()/10.,simHit.localPosition().z()/10.);
 	  LocalPoint lp_exit ( simHit.exitPoint().x()/10.,  simHit.exitPoint().y()/10.,  simHit.exitPoint().z()/10.);
 	  GlobalPoint gp_entry = det->toGlobal(topo.pixelToModuleLocalPoint(lp_entry,id.row(topo.nrows()),id.column(topo.nrows())));
 	  GlobalPoint gp_exit  = det->toGlobal(topo.pixelToModuleLocalPoint(lp_exit,id.row(topo.nrows()),id.column(topo.nrows())));
-    
+	  //GlobalPoint gp_mid   = det->toGlobal(topo.pixelToModuleLocalPoint(lp_mid,id.row(topo.nrows()),id.column(topo.nrows())));    
+
+	  float eta = gp_entry.eta();
+	  float phi = gp_entry.phi();
+
 	  outTree_.simHits_n += 1;
     
 	  outTree_.simHits_det->push_back(1);
@@ -285,6 +291,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  outTree_.simHits_crystal->push_back(crystal);
 	  outTree_.simHits_ieta->push_back(ieta);
 	  outTree_.simHits_iphi->push_back(iphi);
+	  outTree_.simHits_eta->push_back(eta);
+          outTree_.simHits_phi->push_back(phi);
 	  outTree_.simHits_entry_local_x->push_back(lp_entry.x());
 	  outTree_.simHits_entry_local_y->push_back(lp_entry.y());
 	  outTree_.simHits_entry_local_z->push_back(lp_entry.z());
@@ -1006,6 +1014,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		outTree_.matchedSimHits_crystal->at(idx).push_back(crystal);
 		outTree_.matchedSimHits_ieta->at(idx).push_back(ieta);
 		outTree_.matchedSimHits_iphi->at(idx).push_back(iphi);
+		outTree_.matchedSimHits_eta->at(idx).push_back(eta);
+		outTree_.matchedSimHits_phi->at(idx).push_back(phi);
 		outTree_.matchedSimHits_entry_local_x->at(idx).push_back(lp_entry.x());
 		outTree_.matchedSimHits_entry_local_y->at(idx).push_back(lp_entry.y());
 		outTree_.matchedSimHits_entry_local_z->at(idx).push_back(lp_entry.z());

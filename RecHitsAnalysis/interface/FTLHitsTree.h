@@ -56,6 +56,8 @@ using namespace std;
   DATA(vector<int>,   simHits_crystal)                                  \
   DATA(vector<int>,   simHits_ieta)                                     \
   DATA(vector<int>,   simHits_iphi)                                     \
+  DATA(vector<float>,   simHits_eta)                                     \
+  DATA(vector<float>,   simHits_phi)                                     \
   DATA(vector<float>, simHits_entry_local_x)                            \
   DATA(vector<float>, simHits_entry_local_y)                            \
   DATA(vector<float>, simHits_entry_local_z)                            \
@@ -125,6 +127,8 @@ using namespace std;
   DATA(vector, matchedSimHits_crystal,       <vector<int> >)            \
   DATA(vector, matchedSimHits_ieta,          <vector<int> >)            \
   DATA(vector, matchedSimHits_iphi,          <vector<int> >)            \
+  DATA(vector, matchedSimHits_eta,	     <vector<float> >)          \
+  DATA(vector, matchedSimHits_phi, 	     <vector<float> >)          \
   DATA(vector, matchedSimHits_entry_local_x, <vector<float> >)          \
   DATA(vector, matchedSimHits_entry_local_y, <vector<float> >)          \
   DATA(vector, matchedSimHits_entry_local_z, <vector<float> >)          \
