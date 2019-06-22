@@ -76,20 +76,35 @@ histos["BTLrecHits_length_2_inside"]=R.TH1F("BTLrecHits_length_2_inside","BTLrec
 histos["BTLrecHits_length_1_outside"]=R.TH1F("BTLrecHits_length_1_outside","BTLrecHits_length_1_outside",300,-100,200)
 histos["BTLrecHits_length_2_outside"]=R.TH1F("BTLrecHits_length_2_outside","BTLrecHits_length_2_outside",300,-100,200)
 histos["BTLrecHits_t1_travel_vs_t2_travel"]=R.TH2F("BTLrecHits_t1_travel_vs_t2_travel","BTLrecHits_t1_travel_vs_t2_travel",50,-2.,3.,50,-2.,3.)
-histos["BTLrecHits_x1_vs_x2"]=R.TH2F("BTLrecHits_x1_vs_x2","BTLrecHits_x1_vs_x2",100,-0.05,0.21,100,-0.05,0.21)
+histos["BTLrecHits_x1_vs_x2"]=R.TH2F("BTLrecHits_x1_vs_x2","BTLrecHits_x1_vs_x2",80,-50,120,80,-50,120)
 histos["BTLrecHits_average_time"]=R.TH2F("BTLrecHits_average_time","BTLrecHits_average_time",300,0,60,300,0,60)
 histos["BTLrecHits_t_travel_track_t0"]=R.TH2F("BTLrecHits_t_travel_track_t0","BTLrecHits_t_travel_track_t0",50,0,10,50,0,10)
 histos["BTLrecHits_t_travel"]=R.TH2F("BTLrecHits_t_travel","BTLrecHits_t_travel",50,0,10,50,0,10)
 histos["BTLrecHits_t_calc_minus_t_true"]=R.TH1F("BTLrecHits_t_calc_minus_t_true","BTLrecHits_t_calc_minus_t_true",2000,-2,2)
 histos["BTLsimHits_z_local"]=R.TH1F("BTLsimHits_z_local","BTLsimHits_z_local",400,-10,10)
-histos["BTLx1_calc_minus_x_true"]=R.TH1F("BTLx1_calc_minus_x_true","BTLx1_calc_minus_x_true",400,-60,60)
-histos["BTLx2_calc_minus_x_true"]=R.TH1F("BTLx2_calc_minus_x_true","BTLx2_calc_minus_x_true",400,-60,60)
-histos["BTLx1_calc_minus_x_true_inside"]=R.TH1F("BTLx1_calc_minus_x_true_inside","BTLx1_calc_minus_x_true_inside",400,-60,60)
-histos["BTLx2_calc_minus_x_true_inside"]=R.TH1F("BTLx2_calc_minus_x_true_inside","BTLx2_calc_minus_x_true_inside",400,-60,60)
-histos["BTLx1_calc_minus_x_true_outside"]=R.TH1F("BTLx1_calc_minus_x_true_outside","BTLx1_calc_minus_x_true_outside",400,-60,60)
-histos["BTLx2_calc_minus_x_true_outside"]=R.TH1F("BTLx2_calc_minus_x_true_outside","BTLx2_calc_minus_x_true_outside",400,-60,60)
+histos["BTLx1_calc_minus_x_true"]=R.TH1F("BTLx1_calc_minus_x_true","BTLx1_calc_minus_x_true",120,-30,30)
+histos["BTLx2_calc_minus_x_true"]=R.TH1F("BTLx2_calc_minus_x_true","BTLx2_calc_minus_x_true",120,-30,30)
+histos["BTLx1_calc_minus_x_true_inside"]=R.TH1F("BTLx1_calc_minus_x_true_inside","BTLx1_calc_minus_x_true_inside",120,-30,30)
+histos["BTLx2_calc_minus_x_true_inside"]=R.TH1F("BTLx2_calc_minus_x_true_inside","BTLx2_calc_minus_x_true_inside",120,-30,30)
+histos["BTLx1_calc_minus_x_true_outside"]=R.TH1F("BTLx1_calc_minus_x_true_outside","BTLx1_calc_minus_x_true_outside",120,-30,30)
+histos["BTLx2_calc_minus_x_true_outside"]=R.TH1F("BTLx2_calc_minus_x_true_outside","BTLx2_calc_minus_x_true_outside",120,-30,30)
 histos["BTL_total_length_"]=R.TH1F("BTL_total_length_","BTL_total_length_",40,-100,300)
 histos["x_true_vs_t"]=R.TProfile("x_true_vs_t","x_true_vs_t",60,-30,30)
+histos["res_x2_ave"]=R.TH1F("res_x2_ave","res_x2_ave",120,-30,30)
+histos["res_x2_ave_inside"]=R.TH1F("res_x2_ave_inside","res_x2_ave_inside",120,-30,30)
+histos["res_x2_ave_outside"]=R.TH1F("res_x2_ave_outside","res_x2_ave_outside",120,-30,30)
+histos["res_x1_ave"]=R.TH1F("res_x1_ave","res_x1_ave",120,-30,30)
+histos["res_x1_ave_inside"]=R.TH1F("res_x1_ave_inside","res_x1_ave_inside",120,-30,30)
+histos["res_x1_ave_outside"]=R.TH1F("res_x1_ave_outside","res_x1_ave_outside",120,-30,30)
+
+
+histos["BTLrecHits_total_length_tree"]=R.TH1F("BTLrecHits_total_length_tree","BTLrecHits_total_length_tree",150,-500,1000)
+histos["BTLrecHits_length_1_tree"]=R.TH1F("BTLrecHits_length_1_tree","BTLrecHits_length_1_tree",300,-100,200)
+histos["BTLrecHits_length_2_tree"]=R.TH1F("BTLrecHits_length_2_tree","BTLrecHits_length_2_tree",300,-100,200)
+histos["BTLx1_calc_minus_x_true_tree"]=R.TH1F("BTLx1_calc_minus_x_true_tree","BTLx1_calc_minus_x_true_tree",120,-30,30)
+histos["BTLx2_calc_minus_x_true_tree"]=R.TH1F("BTLx2_calc_minus_x_true_tree","BTLx2_calc_minus_x_true_tree",120,-30,30)
+
+
 
 
 det_id = { 'BTL':1  , 'ETL':2 }
@@ -149,7 +164,7 @@ for ievent,event in enumerate(dh):
 			#histos["BTLrecHits_length_1"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
         		#histos["BTLrecHits_length_2"].Fill(1000.*speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled))
         		histos["BTLrecHits_t1_travel_vs_t2_travel"].Fill(event.recHits_uncal_time2[iuncalRecHit]-t_travelled,event.recHits_uncal_time1[iuncalRecHit]-t_travelled)
-        		histos["BTLrecHits_x1_vs_x2"].Fill(speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled),speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
+        		histos["BTLrecHits_x1_vs_x2"].Fill(1000.*speed_of_light*(event.recHits_uncal_time2[iuncalRecHit]-t_travelled),1000.*speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-t_travelled))
 			histos["BTLrecHits_length1_minus_length2"].Fill(speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]-event.recHits_uncal_time2[iuncalRecHit]))
         		histos["BTLrecHits_total_length"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[iuncalRecHit]+event.recHits_uncal_time2[iuncalRecHit]-2.0*t_travelled))
 			matchiTrack = iTrack
@@ -180,8 +195,12 @@ for ievent,event in enumerate(dh):
 			#t_travelled_calc = event.track_tmtd[i_Track]
 			x1_calc = 2.85-100.*speed_of_light*(event.recHits_uncal_time1[i_RecHit]-t_travelled_calc)
 			x2_calc = 100.*speed_of_light*(event.recHits_uncal_time2[i_RecHit]-t_travelled_calc)-2.85
+			x1_ave = 28.5-0.5*((57.0-1000.*speed_of_light*(event.recHits_uncal_time2[i_RecHit]-t_travelled_calc))+1000.*speed_of_light*(event.recHits_uncal_time1[i_RecHit]-t_travelled_calc))
+			x2_ave = 0.5*((57.0-1000.*speed_of_light*(event.recHits_uncal_time1[i_RecHit]-t_travelled_calc))+1000.*speed_of_light*(event.recHits_uncal_time2[i_RecHit]-t_travelled_calc))-28.5
+			#x2_ave = 0.5*(1000.*speed_of_light*(event.recHits_uncal_time2[i_RecHit]-event.recHits_uncal_time1[i_RecHit]))
 			match_recHit = i_RecHit
 			histos["BTL_total_length_"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[i_RecHit]+event.recHits_uncal_time2[i_RecHit]-2.0*t_travelled_calc))
+			histos["BTLrecHits_total_length_tree"].Fill(event.recHits_uncal_position_left[i_RecHit]+event.recHits_uncal_position_right[i_RecHit])
 			break
 	if(t_calc==-999.):
 		continue
@@ -193,24 +212,36 @@ for ievent,event in enumerate(dh):
 	if(match_simHit>=0 and match_recHit>=0):
 			t_true = event.simHits_time[match_simHit]
 			x_true = event.simHits_entry_local_y[match_simHit]
+			
 			histos["BTLx1_calc_minus_x_true"].Fill(10.*(x1_calc-x_true))
                         histos["BTLx2_calc_minus_x_true"].Fill(10.*(x2_calc-x_true))
 			histos["x_true_vs_t"].Fill(10.*x_true,1000.*(event.recHits_uncal_time2[match_recHit]-t_travelled_calc))
 			histos["BTLrecHits_length_1"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[match_recHit]-t_travelled_calc))
                         histos["BTLrecHits_length_2"].Fill(1000.*speed_of_light*(event.recHits_uncal_time2[match_recHit]-t_travelled_calc))
+			histos["res_x2_ave"].Fill(x2_ave-10.*x_true)
+			histos["res_x1_ave"].Fill(x1_ave-10.*x_true)
+
+			histos["BTLrecHits_length_1_tree"].Fill(event.recHits_uncal_position_left[i_RecHit])
+			histos["BTLrecHits_length_2_tree"].Fill(event.recHits_uncal_position_right[i_RecHit])
+			histos["BTLx1_calc_minus_x_true_tree"].Fill((event.recHits_uncal_position_left[i_RecHit]-28.5)-10.*(x_true))
+                        histos["BTLx2_calc_minus_x_true_tree"].Fill(-(28.5-event.recHits_uncal_position_right[i_RecHit])-10.*(x_true))
 
 			if(abs(event.simHits_entry_local_y[match_simHit])<1.0 and abs(event.simHits_entry_local_x[match_simHit])<0.1 and abs(event.simHits_entry_local_z[match_simHit])<0.13):
 				histos["BTLrecHits_length_1_inside"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[match_recHit]-t_travelled_calc))
                         	histos["BTLrecHits_length_2_inside"].Fill(1000.*speed_of_light*(event.recHits_uncal_time2[match_recHit]-t_travelled_calc))
 				histos["BTLx1_calc_minus_x_true_inside"].Fill(10.*(x1_calc-x_true))
 				histos["BTLx2_calc_minus_x_true_inside"].Fill(10.*(x2_calc-x_true))
+				histos["res_x2_ave_inside"].Fill(x2_ave-10.*x_true)
+				histos["res_x1_ave_inside"].Fill(x1_ave-10.*x_true)
+
 			else:
                                 histos["BTLrecHits_length_1_outside"].Fill(1000.*speed_of_light*(event.recHits_uncal_time1[match_recHit]-t_travelled_calc))
                                 histos["BTLrecHits_length_2_outside"].Fill(1000.*speed_of_light*(event.recHits_uncal_time2[match_recHit]-t_travelled_calc))
 
 				histos["BTLx1_calc_minus_x_true_outside"].Fill(10.*(x1_calc-x_true))
                                 histos["BTLx2_calc_minus_x_true_outside"].Fill(10.*(x2_calc-x_true))
-			
+				histos["res_x1_ave_outside"].Fill(x1_ave-10.*x_true)
+				histos["res_x2_ave_outside"].Fill(x2_ave-10.*x_true)
 
 
 

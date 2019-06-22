@@ -407,9 +407,14 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       float time1 = time_pair.first;
       float time2 = time_pair.second;
 
+      std::pair<float,float> position_pair = recHit_uncal.position();
+      float position_left = position_pair.first;
+      float position_right = position_pair.second;
 
     	  outTree_.recHits_uncal_time1->push_back(time1);
 	  outTree_.recHits_uncal_time2->push_back(time2);
+	  outTree_.recHits_uncal_position_left->push_back(position_left);
+	  outTree_.recHits_uncal_position_right->push_back(position_right);
 	  MeasurementPoint mp(recHit_uncal.row(),recHit_uncal.column());
 	  LocalPoint lp = topo.localPosition(mp);
 	  GlobalPoint gp = det->toGlobal(lp);

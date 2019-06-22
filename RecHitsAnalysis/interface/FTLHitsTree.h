@@ -84,6 +84,8 @@ using namespace std;
   DATA(vector<float>, recHits_global_R)                                 \
   DATA(vector<float>, recHits_uncal_time1)                                     \
   DATA(vector<float>, recHits_uncal_time2)                                     \
+  DATA(vector<float>, recHits_uncal_position_left)                                     \
+  DATA(vector<float>, recHits_uncal_position_right)                                     \
   DATA(vector<double>,   recHits_uncal_eta)                                     \
   DATA(vector<double>,   recHits_uncal_phi)                                     \
   DATA(vector<float>, recHits_uncal_x)                                          \
