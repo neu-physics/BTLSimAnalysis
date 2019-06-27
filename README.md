@@ -2,7 +2,7 @@
 
 Exactly like it sounds like. 
 
-git clone -b CMSSW https://github.com/simonepigazzini/DynamicTTree.git ExternalTools/DynamicTTree/
+  `git clone -b CMSSW https://github.com/simonepigazzini/DynamicTTree.git ExternalTools/DynamicTTree/`
 
 
 To get plots, do:
