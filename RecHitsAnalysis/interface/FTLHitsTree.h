@@ -17,6 +17,8 @@ using namespace std;
   DATA(int, clusters_n)                   
 
 #define DATA_CLASS_TABLE                                                \
+  DATA(vector<float>, GenPart_eta)                                         \
+  DATA(vector<float>, GenPart_phi)                                        \
   DATA(vector<int>,   track_idx)                                        \
   DATA(vector<float>, track_pt)                                         \
   DATA(vector<float>, track_eta)                                        \
@@ -69,6 +71,9 @@ using namespace std;
   DATA(vector<int>, recHits_det)                                      \
   DATA(vector<float>, recHits_energy)                                   \
   DATA(vector<float>, recHits_time)                                     \
+  DATA(vector<float>, recHits_timeError)                                     \
+  DATA(vector<float>, recHits_dis_left)                                   \
+  DATA(vector<float>, recHits_dis_right)                                     \
   DATA(vector<int>,   recHits_rr)                                       \
   DATA(vector<int>,   recHits_side)                                    \
   DATA(vector<int>,   recHits_module)                                   \

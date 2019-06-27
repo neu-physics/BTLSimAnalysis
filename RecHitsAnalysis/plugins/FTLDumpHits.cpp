@@ -245,6 +245,16 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   if(genVtxHandle_.product()->size()>0)
     genPV = &(genVtxHandle_.product()->at(0));
   
+  for(auto& genParts : genParticles)
+  {
+    float eta = genParts.eta();
+    float phi = genParts.phi();
+    outTree_.GenPart_eta->push_back(eta);
+    outTree_.GenPart_phi->push_back(phi);
+  }
+
+
+
   //---fill the tree - simHits
   outTree_.simHits_n = 0;
  // if (dumpSimHits_)
@@ -319,7 +329,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
     
 	  double energy = recHit.energy();
 	  double time   = recHit.time();
-    
+    	  double timeError = recHit.timeError();
+	  float dis_left = recHit.position().first;
+	  float dis_right = recHit.position().second;
+
 	  MeasurementPoint mp(recHit.row(),recHit.column());
 	  LocalPoint lp = topo.localPosition(mp);
 	  GlobalPoint gp = det->toGlobal(lp);
@@ -370,13 +383,16 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 		  outTree_.recHits_matched_with_uncalibrated->push_back(0.0);
 	  }
 	  match_success = false;*/
-	  //std::cout << "match_success: " << match_success << std::endl;
+	  //std::cout << "local y: " << lp.y() << "	col:" << recHit.column() << std::endl;
 	  
 	  outTree_.recHits_n += 1;
 	    
 	  outTree_.recHits_det->push_back(1);
 	  outTree_.recHits_energy->push_back(energy);
 	  outTree_.recHits_time->push_back(time);
+	  outTree_.recHits_timeError->push_back(timeError);
+	  outTree_.recHits_dis_left->push_back(dis_left);
+	  outTree_.recHits_dis_right->push_back(dis_right);
 	  outTree_.recHits_rr->push_back(RR);
 	  outTree_.recHits_side->push_back(side);
 	  outTree_.recHits_module->push_back(module);
