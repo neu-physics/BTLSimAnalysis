@@ -48,11 +48,11 @@ options.register('useMTDTrack',
                  VarParsing.multiplicity.singleton,
                  VarParsing.varType.bool,
                  "Use MTD Track")
-options.register('crysLayout',
+options.register('geometry',
                  '',
                  VarParsing.multiplicity.singleton,
                  VarParsing.varType.string,
-                 "crystal layout (tile, barphi, barzflat)")
+                 "crystal layout (D49, D50, etc)")
 options.register('nThreads',
                  1,
                  VarParsing.multiplicity.singleton,
@@ -74,13 +74,18 @@ options.maxEvents = -1
 options.parseArguments()
 
 from Configuration.StandardSequences.Eras import eras
-if 'tile' in options.crysLayout:
-    myera=eras.Phase2_timing_layer_tile
-if 'barphi' in options.crysLayout:
-    myera=eras.Phase2_timing_layer_bar
-if 'barzflat' in options.crysLayout:
-    myera=eras.Phase2C4_timing_layer_bar
+#if 'tile' in options.crysLayout:
+#    myera=eras.Phase2_timing_layer_tile
+#if 'barphi' in options.crysLayout:
+#    myera=eras.Phase2_timing_layer_bar
+#if 'barzflat' in options.crysLayout:
+#    myera=eras.Phase2C4_timing_layer_bar
+if 'D49' in options.geometry:
+    myera=eras.Phase2C4
+else: # temporary fix
+    myera=eras.Phase2C4
 process = cms.Process('FTLDumpHits',myera)
+
 '''
 process.load('FWCore/MessageService/MessageLogger_cfi')
 process.MessageLogger = cms.Service("MessageLogger",
@@ -122,15 +127,9 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 # Geometry
-if 'tile' in options.crysLayout:
-    process.load('Configuration.Geometry.GeometryExtended2023D24Reco_cff')
-    process.load('Configuration.Geometry.GeometryExtended2023D24_cff')
-if 'barphi' in options.crysLayout:
-    process.load('Configuration.Geometry.GeometryExtended2023D39Reco_cff')
-    process.load('Configuration.Geometry.GeometryExtended2023D39_cff')
-if 'barzflat' in options.crysLayout:
-    process.load('Configuration.Geometry.GeometryExtended2023D35Reco_cff')
-    process.load('Configuration.Geometry.GeometryExtended2023D35_cff')
+if 'D49' in options.geometry:
+    process.load('Configuration.Geometry.GeometryExtended2026D49Reco_cff')
+    process.load('Configuration.Geometry.GeometryExtended2026D49_cff')
     
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.SimIdeal_cff')
@@ -192,12 +191,15 @@ FTLDumper = process.FTLDumpHits
 if (options.useMTDTrack):
     FTLDumper.tracksTag = cms.untracked.InputTag("trackExtenderWithMTD")
 
-if 'tile' in options.crysLayout:
-    FTLDumper.crysLayout = cms.untracked.int32(1)
-if 'barphi' in options.crysLayout:
+#if 'tile' in options.geometry:
+#    FTLDumper.crysLayout = cms.untracked.int32(1)
+#if 'barphi' in options.crysLayout:
+#    FTLDumper.crysLayout = cms.untracked.int32(4)
+#if 'barzflat' in options.crysLayout:
+#    FTLDumper.crysLayout = cms.untracked.int32(3)
+
+if 'D49' in options.geometry:
     FTLDumper.crysLayout = cms.untracked.int32(4)
-if 'barzflat' in options.crysLayout:
-    FTLDumper.crysLayout = cms.untracked.int32(3)
 
 #BBT 01-22-19
 if (options.dumpRecHits):
