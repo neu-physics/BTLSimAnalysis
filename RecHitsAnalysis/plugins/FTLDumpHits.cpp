@@ -257,8 +257,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 
   //---fill the tree - simHits
   outTree_.simHits_n = 0;
- // if (dumpSimHits_)
-    if (1)
+  if (dumpSimHits_)
+  //    if (1)
     {
       for(auto simHit : simHitsBTL)
 	{
@@ -413,6 +413,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  BTLDetId id = recHit_uncal.id();
 	  DetId geoId = id.geographicalId( crysLayout_);
 	  const auto& det = mtdGeometry_ -> idToDet(geoId);
+
 	  const ProxyMTDTopology& topoproxy = static_cast<const ProxyMTDTopology&>(det->topology());
 	  const RectangularMTDTopology& topo = static_cast<const RectangularMTDTopology&>(topoproxy.specificTopology());    
     
@@ -492,7 +493,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	  int iphi = 0;
 	  float eta = 0;
 	  float phi = 0;
-	  
+
 	  if ( mtdId.mtdSubDetector() == MTDDetId::BTL )
 	    {
 	      BTLDetId btlId(id);
@@ -505,7 +506,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	      eta = gp.eta();
 	      phi = gp.phi();
 	    }
-	  
+
 	  outTree_.clusters_n += 1;    
 	  outTree_.clusters_det->push_back(1);
 	  outTree_.clusters_size->push_back(size);
@@ -948,7 +949,6 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	}
 
       {
-
 	if (dumpSimHits_)
 	  {
 	    //---get associated simHits
@@ -1060,7 +1060,6 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 	//---find associated recHits
 	float sieie=0, sipip=0;
 	float ss_hit_count=0;
-
 	if (dumpRecHits_)
 	  {
     

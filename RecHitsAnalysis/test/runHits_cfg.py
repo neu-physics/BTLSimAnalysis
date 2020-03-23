@@ -81,9 +81,9 @@ from Configuration.StandardSequences.Eras import eras
 #if 'barzflat' in options.crysLayout:
 #    myera=eras.Phase2C4_timing_layer_bar
 if 'D49' in options.geometry:
-    myera=eras.Phase2C4
+    myera=eras.Phase2C9
 else: # temporary fix
-    myera=eras.Phase2C4
+    myera=eras.Phase2C9
 process = cms.Process('FTLDumpHits',myera)
 
 '''
@@ -119,7 +119,7 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1
 # Global tag
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T15', '')
 
 # import of standard configurations
 process.maxEvents = cms.untracked.PSet(
