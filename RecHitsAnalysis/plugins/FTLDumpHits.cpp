@@ -257,8 +257,9 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
 
   //---fill the tree - simHits
   outTree_.simHits_n = 0;
-  if (dumpSimHits_)
+  //if (dumpSimHits_)
   {
+    std::cout << "simHits size: " << simHitsBTL.size() << std::endl;
     for(auto simHit : simHitsBTL)
     {
       BTLDetId id = simHit.detUnitId();
@@ -768,6 +769,7 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_mcMatch_genVtx_t -> push_back(-999.);
     }
     
+    std::cout << "Track velocity: " << track.beta() << std:: endl;
     outTree_.track_idx -> push_back(idx);
     outTree_.track_pt -> push_back(track.pt());
     outTree_.track_eta -> push_back(track.eta());
