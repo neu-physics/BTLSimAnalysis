@@ -17,6 +17,7 @@ using namespace std;
   DATA(int, clusters_n)                   
 
 #define DATA_CLASS_TABLE                                                \
+  DATA(vector<int>,   GenPart_id)                                        \
   DATA(vector<float>, GenPart_eta)                                         \
   DATA(vector<float>, GenPart_phi)                                        \
   DATA(vector<int>,   track_idx)                                        \
@@ -69,6 +70,8 @@ using namespace std;
   DATA(vector<float>, simHits_exit_local_z)                             \
   DATA(vector<float>, simHits_exit_global_R)                            \
   DATA(vector<int>, recHits_det)                                      \
+  DATA(vector<int>, recHits_row)                                      \
+  DATA(vector<int>, recHits_col)                                      \
   DATA(vector<float>, recHits_energy)                                   \
   DATA(vector<float>, recHits_time)                                     \
   DATA(vector<float>, recHits_timeError)                                     \
@@ -116,13 +119,20 @@ using namespace std;
   DATA(vector<int>,   clusters_iphi)                                     \
   DATA(vector<double>,   clusters_eta)                                     \
   DATA(vector<double>,   clusters_phi)                                     \
+  DATA(vector<float>, clusters_hits_eta)                                  \
+  DATA(vector<float>, clusters_hits_phi)                                  \
+  DATA(vector<float>, clusters_hits_energy)                                  \
   DATA(vector<float>, clusters_local_x)                                  \
   DATA(vector<float>, clusters_local_y)                                  \
   DATA(vector<float>, clusters_local_z)                                  \
   DATA(vector<float>, clusters_global_R)                                 \
+  DATA(vector<int>,   clusters_size_cut)                                     \
   DATA(vector<int>,   matchedSimHits_n)                                 \
   DATA(vector<int>,   matchedRecHits_n)                                 \
   DATA(vector<int>,   matchedClusters_n)                                 \
+  DATA(vector, clusters_hit_eta,       <vector<float> >)    \
+  DATA(vector, clusters_hit_phi,             <vector<float> >)          \
+  DATA(vector, clusters_hit_energy,          <vector<float> >)          \
   DATA(vector, matchedSimHits_idx,           <vector<int> >)            \
   DATA(vector, matchedSimHits_det,           <vector<int> >)            \
   DATA(vector, matchedSimHits_energy,        <vector<float> >)          \

@@ -249,6 +249,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   {
     float eta = genParts.eta();
     float phi = genParts.phi();
+    int genPdgId = genParts.pdgId();
+    outTree_.GenPart_id->push_back(genPdgId);
     outTree_.GenPart_eta->push_back(eta);
     outTree_.GenPart_phi->push_back(phi);
   }
@@ -259,7 +261,6 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
   outTree_.simHits_n = 0;
   //if (dumpSimHits_)
   {
-    std::cout << "simHits size: " << simHitsBTL.size() << std::endl;
     for(auto simHit : simHitsBTL)
     {
       BTLDetId id = simHit.detUnitId();
@@ -337,6 +338,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       LocalPoint lp = topo.localPosition(mp);
       GlobalPoint gp = det->toGlobal(lp);
       
+      int row = recHit.row();
+      int col = recHit.column();
       int RR = id.mtdRR();
       int side = id.mtdSide();
       int module = id.module();
@@ -387,6 +390,8 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       
       outTree_.recHits_n += 1;
         
+      outTree_.recHits_row->push_back(row);
+      outTree_.recHits_col->push_back(col);
       outTree_.recHits_det->push_back(1);
       outTree_.recHits_energy->push_back(energy);
       outTree_.recHits_time->push_back(time);
@@ -492,7 +497,11 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       int iphi = 0;
       float eta = 0;
       float phi = 0;
-    
+      int size_cut = 0;
+      std::vector <float> eta_clus_hits;
+      std::vector <float> phi_clus_hits;
+      std::vector <float> energy_clus_hits;
+
       if ( mtdId.mtdSubDetector() == MTDDetId::BTL )
       {
         BTLDetId btlId(id);
@@ -505,6 +514,22 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
         eta = gp.eta();
         phi = gp.phi();
       }
+
+      for (int iHit = 0; iHit<size; iHit++)
+      {
+        MeasurementPoint mp_hit_clus(cluster.hit(iHit).x(),cluster.hit(iHit).y());
+        LocalPoint lp_hit_clus = topo.localPosition(mp_hit_clus);
+        GlobalPoint gp_hit_clus = det->toGlobal(lp_hit_clus);
+        eta_clus_hits.push_back(gp_hit_clus.eta());
+        phi_clus_hits.push_back(gp_hit_clus.phi());
+        energy_clus_hits.push_back(cluster.hit(iHit).energy());
+        outTree_.clusters_hits_eta->push_back(gp_hit_clus.eta());
+        outTree_.clusters_hits_phi->push_back(gp_hit_clus.phi());
+        outTree_.clusters_hits_energy->push_back(cluster.hit(iHit).energy());
+        if (cluster.hit(iHit).energy()>3.0)
+            size_cut++;
+      }
+
     
       outTree_.clusters_n += 1;    
       outTree_.clusters_det->push_back(1);
@@ -531,6 +556,10 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.clusters_local_y->push_back(lp.y());
       outTree_.clusters_local_z->push_back(lp.z());
       outTree_.clusters_global_R->push_back(sqrt(gp.perp2()));
+      outTree_.clusters_size_cut->push_back(size_cut);
+      outTree_.clusters_hit_eta->push_back(eta_clus_hits);
+      outTree_.clusters_hit_phi->push_back(phi_clus_hits);
+      outTree_.clusters_hit_energy->push_back(energy_clus_hits);
     }
   }
 
@@ -769,7 +798,6 @@ void FTLDumpHits::analyze(edm::Event const& event, edm::EventSetup const& setup)
       outTree_.track_mcMatch_genVtx_t -> push_back(-999.);
     }
     
-    std::cout << "Track velocity: " << track.beta() << std:: endl;
     outTree_.track_idx -> push_back(idx);
     outTree_.track_pt -> push_back(track.pt());
     outTree_.track_eta -> push_back(track.eta());
